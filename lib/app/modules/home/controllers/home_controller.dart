@@ -15,9 +15,9 @@ class HomeController extends GetxController {
   RxString dropDownValueSEC = "BRL".obs;
   RxString secundarySimbol = "R\$".obs;
 
-  /* RxDouble usd = 0.0.obs;
+  RxDouble usd = 0.0.obs;
   RxDouble brl = 0.0.obs;
-  RxDouble btc = 0.0.obs; */
+  RxString btc = "0.0".obs;
   RxDouble valorConvertido = 0.0.obs;
 
   int valueToConvert = 0;
@@ -26,19 +26,24 @@ class HomeController extends GetxController {
 
   RxString returnCurrency = "".obs;
 
-  /*  void recuperarPreco() async {
+  void recuperarPreco() async {
     String url = "https://blockchain.info/ticker";
     http.Response response = await http.get(Uri.parse(url));
     Map<String, dynamic> retorno = json.decode(response.body);
     usd.value = retorno["USD"]["buy"];
     brl.value = retorno["BRL"]["buy"];
-  } */
+  }
 
   currencyReturn(String primaryCurrency, String qtdCurrency) async {
     int qtd = int.parse(qtdController.text);
     String url = "https://blockchain.info/ticker";
     String url2 = "https://blockchain.info/tobtc?currency=USD&value=500";
-    // http.Response response = await http.get(Uri.parse(url));
+    http.Response response1 = await http.get(Uri.parse(url));
+    Map<String, dynamic> retorno1 = json.decode(response1.body);
+
+    retorno1.forEach((key, value) {
+      print(value["symbol"]);
+    });
     http.Response response = await http.get(Uri.parse(
         "https://blockchain.info/tobtc?currency=${primaryCurrency}&value=${qtdCurrency}"));
     valorConvertido.value = double.parse(response.body);
@@ -47,7 +52,7 @@ class HomeController extends GetxController {
 
   void onInit() {
     super.onInit();
-//    recuperarPreco();
+    recuperarPreco();
   }
 
   @override

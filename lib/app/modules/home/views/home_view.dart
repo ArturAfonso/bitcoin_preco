@@ -16,10 +16,21 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  HomeController controller = HomeController();
+
+/*   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.recuperarPreco();
+  } */
+
   @override
   Widget build(BuildContext context) {
     HomeController controller = HomeController();
-
+    Future.delayed(Duration(seconds: 2), () {
+      controller.recuperarPreco();
+    });
     return Scaffold(
       /* appBar: AppBar(
         title: Text('Preço do Bitcoin'),
@@ -47,6 +58,33 @@ class _HomeViewState extends State<HomeView> {
                       items: [
                         DropdownMenuItem(child: Text("BRL"), value: "BRL"),
                         DropdownMenuItem(child: Text("USD"), value: "USD"),
+                        //------------------------------------------
+                        DropdownMenuItem(child: Text("ARS"), value: "ARS"),
+                        DropdownMenuItem(child: Text("AUD"), value: "AUD"),
+                        DropdownMenuItem(child: Text("CAD"), value: "CAD"),
+                        DropdownMenuItem(child: Text("CHF"), value: "CHF"),
+                        DropdownMenuItem(child: Text("CLP"), value: "CLP"),
+                        DropdownMenuItem(child: Text("CNY"), value: "CNY"),
+                        DropdownMenuItem(child: Text("CZK"), value: "CZK"),
+                        DropdownMenuItem(child: Text("DKK"), value: "DKK"),
+                        DropdownMenuItem(child: Text("EUR"), value: "EUR"),
+                        DropdownMenuItem(child: Text("GBP"), value: "GBP"),
+                        DropdownMenuItem(child: Text("HKD"), value: "HKD"),
+                        DropdownMenuItem(child: Text("HRK"), value: "HRK"),
+                        DropdownMenuItem(child: Text("HUF"), value: "HUF"),
+                        DropdownMenuItem(child: Text("INR"), value: "INR"),
+                        DropdownMenuItem(child: Text("ISK"), value: "ISK"),
+                        DropdownMenuItem(child: Text("JPY"), value: "JPY"),
+                        DropdownMenuItem(child: Text("KRW"), value: "KRW"),
+                        DropdownMenuItem(child: Text("NZD"), value: "NZD"),
+                        DropdownMenuItem(child: Text("PLN"), value: "PLN"),
+                        DropdownMenuItem(child: Text("RON"), value: "RON"),
+                        DropdownMenuItem(child: Text("RUB"), value: "RUB"),
+                        DropdownMenuItem(child: Text("SEK"), value: "SEK"),
+                        DropdownMenuItem(child: Text("SGD"), value: "SGD"),
+                        DropdownMenuItem(child: Text("THB"), value: "THB"),
+                        DropdownMenuItem(child: Text("TRY"), value: "TRY"),
+                        DropdownMenuItem(child: Text("TWD"), value: "TWD"),
                       ],
                       value: controller.dropDownValuePRI.value,
                       hint: Obx(() => Text(controller.dropDownValuePRI.value)),
@@ -112,12 +150,53 @@ class _HomeViewState extends State<HomeView> {
               onPressed: () {
                 controller.currencyReturn(controller.dropDownValuePRI.value,
                     controller.qtdController.text);
+                controller.recuperarPreco();
                 //controller.recuperarPreco();
               },
-              child: Text("Atualizar"),
+              child: Text("Consultar"),
             ),
           )
         ],
+      ),
+      bottomSheet: Container(
+        width: Get.size.width,
+        color: Colors.green[300],
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Cotação atual de 1 BTC: ",
+              style: TextStyle(color: Colors.black54),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 8.0,
+              ),
+              child: Text("USD \$"),
+            ),
+            Obx(() => Text(
+                  UtilBrasilFields.removerSimboloMoeda(
+                      UtilBrasilFields.obterReal(controller.usd.value)
+                          .toString()),
+                  style: TextStyle(color: Colors.black54),
+                )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Text(" / BRL \$"),
+                ),
+                Obx(() => Text(
+                      UtilBrasilFields.removerSimboloMoeda(
+                          UtilBrasilFields.obterReal(controller.brl.value)
+                              .toString()),
+                      style: TextStyle(color: Colors.black54),
+                    )),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
