@@ -6,13 +6,20 @@ import '../controllers/home_controller.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:brasil_fields/brasil_fields.dart';
 
-class HomeView extends GetView<HomeController> {
+class HomeView extends StatefulWidget {
+  const HomeView({Key? key}) : super(key: key);
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
-    int umbtc = 1;
-    TextEditingController _btcController =
-        TextEditingController(text: 1.toString());
+    HomeController controller = HomeController();
+
     return Scaffold(
       /* appBar: AppBar(
         title: Text('Preço do Bitcoin'),
@@ -26,56 +33,83 @@ class HomeView extends GetView<HomeController> {
             padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 30),
             child: Image.asset('imagens/logobtc.png'),
           ),
-          /* Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
-                child: Text("BTC ₿"),
-              ),
-              SizedBox(
-                width: 80,
+              Container(
+                width: 30,
                 child: TextFormField(
-                  controller: _btcController,
-                  style: TextStyle(fontSize: 18),
-                  decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      // hintText: "Placa",
-
-                      // contentPadding:EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      contentPadding: EdgeInsets.only(
-                        left: 12,
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.black)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.black),
-                      )),
+                  controller: controller.qtdController,
                 ),
+              ),
+              Container(
+                child: Obx(() => DropdownButton(
+                      items: [
+                        DropdownMenuItem(child: Text("BRL"), value: "BRL"),
+                        DropdownMenuItem(child: Text("USD"), value: "USD"),
+                        DropdownMenuItem(child: Text("BTC"), value: "BTC"),
+                      ],
+                      value: controller.dropDownValuePRI.value,
+                      hint: Obx(() => Text(controller.dropDownValuePRI.value)),
+                      onChanged: (selectedValue) {
+                        controller.dropDownValuePRI.value =
+                            selectedValue.toString();
+                        print(controller.dropDownValuePRI.value);
+                        controller.primaryCurrency.value =
+                            controller.dropDownValuePRI.value;
+
+                        switch (controller.dropDownValuePRI.value) {
+                          case "BRL":
+                            controller.primarySimbol.value = "R\$";
+                            break;
+                          case "USD":
+                            controller.primarySimbol.value = "  \$";
+                            break;
+                          case "BTC":
+                            controller.primarySimbol.value = "  \₿";
+                            break;
+                          default:
+                        }
+                      },
+                    )),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Text("para"),
+              ),
+              Container(
+                child: Obx(() => DropdownButton(
+                      items: [
+                        DropdownMenuItem(child: Text("BRL"), value: "BRL"),
+                        DropdownMenuItem(child: Text("USD"), value: "USD"),
+                        DropdownMenuItem(child: Text("BTC"), value: "BTC"),
+                      ],
+                      value: controller.dropDownValueSEC.value,
+                      hint: Obx(() => Text(controller.dropDownValueSEC.value)),
+                      onChanged: (selectedValue) {
+                        controller.dropDownValueSEC.value =
+                            selectedValue.toString();
+                        print(controller.dropDownValueSEC.value);
+                        controller.secondaryCurrency.value =
+                            controller.dropDownValueSEC.value;
+                        switch (controller.dropDownValueSEC.value) {
+                          case "BRL":
+                            controller.secundarySimbol.value = "R\$";
+                            break;
+                          case "USD":
+                            controller.secundarySimbol.value = "  \$";
+                            break;
+                          case "BTC":
+                            controller.secundarySimbol.value = "  \₿";
+                            break;
+                          default:
+                        }
+                      },
+                    )),
               ),
             ],
-          ), */
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Text("BTC ₿:"),
-                ),
-                Text("1"),
-              ],
-            ),
           ),
-          Padding(
+          /*   Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -84,15 +118,18 @@ class HomeView extends GetView<HomeController> {
                   padding: const EdgeInsets.only(
                     right: 8.0,
                   ),
-                  child: Text("USD \$"),
+                  child: Obx(() => Text(
+                      "${controller.dropDownValuePRI} ${controller.primarySimbol}")),
                 ),
                 Obx(() => Text(
-                      controller.usd.value,
+                      UtilBrasilFields.removerSimboloMoeda(
+                          UtilBrasilFields.obterReal(controller.usd.value)
+                              .toString()),
                       style: TextStyle(color: Colors.green),
                     )),
               ],
             ),
-          ),
+          ), */
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -100,10 +137,14 @@ class HomeView extends GetView<HomeController> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: Text("BRL \$"),
+                  child: Obx(() => Text(
+                      "${controller.dropDownValueSEC} ${controller.secundarySimbol}")),
                 ),
                 Obx(() => Text(
-                      controller.brl.value,
+                      UtilBrasilFields.removerSimboloMoeda(
+                          UtilBrasilFields.obterReal(
+                                  controller.valorConvertido.value)
+                              .toString()),
                       style: TextStyle(color: Colors.green),
                     )),
               ],
@@ -121,7 +162,9 @@ class HomeView extends GetView<HomeController> {
                 padding: EdgeInsets.all(12),
               ),
               onPressed: () {
-                controller.recuperarPreco();
+                controller.currencyReturn(controller.dropDownValuePRI.value,
+                    controller.dropDownValueSEC.value);
+                //controller.recuperarPreco();
               },
               child: Text("Atualizar"),
             ),

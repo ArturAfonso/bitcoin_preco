@@ -5,9 +5,12 @@ description: A new Flutter project.
 environment: 
   sdk: '>=2.15.0-250.0.dev <3.0.0'
 
-dependencies: 
+dependencies:
+  
+  brasil_fields: ^1.4.5
   cupertino_icons: ^1.0.2
   get: 4.6.1
+  get_storage: ^2.0.3
   http: ^0.13.4
   #flutter_launcher_icons: ^0.9.2
   
