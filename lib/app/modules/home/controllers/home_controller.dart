@@ -10,7 +10,7 @@ class HomeController extends GetxController {
   //TODO: Implement HomeController
   TextEditingController qtdController =
       TextEditingController(text: 1.toString());
-  RxString dropDownValuePRI = "BTC".obs;
+  RxString dropDownValuePRI = "BRL".obs;
   RxString primarySimbol = "  \₿".obs;
   RxString dropDownValueSEC = "BRL".obs;
   RxString secundarySimbol = "R\$".obs;
@@ -34,13 +34,15 @@ class HomeController extends GetxController {
     brl.value = retorno["BRL"]["buy"];
   } */
 
-  currencyReturn(String primaryCurrency, String secundaryCurrency) async {
+  currencyReturn(String primaryCurrency, String qtdCurrency) async {
     int qtd = int.parse(qtdController.text);
     String url = "https://blockchain.info/ticker";
-    http.Response response = await http.get(Uri.parse(url));
-    Map<String, dynamic> retorno = json.decode(response.body);
-
-    valorConvertido.value = (retorno["${secondaryCurrency}"]["buy"] * qtd);
+    String url2 = "https://blockchain.info/tobtc?currency=USD&value=500";
+    // http.Response response = await http.get(Uri.parse(url));
+    http.Response response = await http.get(Uri.parse(
+        "https://blockchain.info/tobtc?currency=${primaryCurrency}&value=${qtdCurrency}"));
+    valorConvertido.value = double.parse(response.body);
+    //Map<String, dynamic> retorno = json.decode(response.body);
   }
 
   void onInit() {

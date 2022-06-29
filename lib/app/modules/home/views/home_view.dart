@@ -47,7 +47,6 @@ class _HomeViewState extends State<HomeView> {
                       items: [
                         DropdownMenuItem(child: Text("BRL"), value: "BRL"),
                         DropdownMenuItem(child: Text("USD"), value: "USD"),
-                        DropdownMenuItem(child: Text("BTC"), value: "BTC"),
                       ],
                       value: controller.dropDownValuePRI.value,
                       hint: Obx(() => Text(controller.dropDownValuePRI.value)),
@@ -57,53 +56,6 @@ class _HomeViewState extends State<HomeView> {
                         print(controller.dropDownValuePRI.value);
                         controller.primaryCurrency.value =
                             controller.dropDownValuePRI.value;
-
-                        switch (controller.dropDownValuePRI.value) {
-                          case "BRL":
-                            controller.primarySimbol.value = "R\$";
-                            break;
-                          case "USD":
-                            controller.primarySimbol.value = "  \$";
-                            break;
-                          case "BTC":
-                            controller.primarySimbol.value = "  \₿";
-                            break;
-                          default:
-                        }
-                      },
-                    )),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Text("para"),
-              ),
-              Container(
-                child: Obx(() => DropdownButton(
-                      items: [
-                        DropdownMenuItem(child: Text("BRL"), value: "BRL"),
-                        DropdownMenuItem(child: Text("USD"), value: "USD"),
-                        DropdownMenuItem(child: Text("BTC"), value: "BTC"),
-                      ],
-                      value: controller.dropDownValueSEC.value,
-                      hint: Obx(() => Text(controller.dropDownValueSEC.value)),
-                      onChanged: (selectedValue) {
-                        controller.dropDownValueSEC.value =
-                            selectedValue.toString();
-                        print(controller.dropDownValueSEC.value);
-                        controller.secondaryCurrency.value =
-                            controller.dropDownValueSEC.value;
-                        switch (controller.dropDownValueSEC.value) {
-                          case "BRL":
-                            controller.secundarySimbol.value = "R\$";
-                            break;
-                          case "USD":
-                            controller.secundarySimbol.value = "  \$";
-                            break;
-                          case "BTC":
-                            controller.secundarySimbol.value = "  \₿";
-                            break;
-                          default:
-                        }
                       },
                     )),
               ),
@@ -137,14 +89,10 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: Obx(() => Text(
-                      "${controller.dropDownValueSEC} ${controller.secundarySimbol}")),
+                  child: Text("BTC \₿"),
                 ),
                 Obx(() => Text(
-                      UtilBrasilFields.removerSimboloMoeda(
-                          UtilBrasilFields.obterReal(
-                                  controller.valorConvertido.value)
-                              .toString()),
+                      controller.valorConvertido.value.toString(),
                       style: TextStyle(color: Colors.green),
                     )),
               ],
@@ -163,7 +111,7 @@ class _HomeViewState extends State<HomeView> {
               ),
               onPressed: () {
                 controller.currencyReturn(controller.dropDownValuePRI.value,
-                    controller.dropDownValueSEC.value);
+                    controller.qtdController.text);
                 //controller.recuperarPreco();
               },
               child: Text("Atualizar"),
