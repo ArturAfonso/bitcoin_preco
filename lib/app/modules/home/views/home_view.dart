@@ -47,10 +47,14 @@ class _HomeViewState extends State<HomeView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 30,
-                child: TextFormField(
-                  controller: controller.qtdController,
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: Container(
+                  width: 60,
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: controller.qtdController,
+                  ),
                 ),
               ),
               Container(
@@ -165,12 +169,12 @@ class _HomeViewState extends State<HomeView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Cotação atual de 1 BTC: ",
+              "Valor atual 1 BTC:",
               style: TextStyle(color: Colors.black54),
             ),
             Padding(
               padding: const EdgeInsets.only(
-                right: 8.0,
+                right: 5.0,
               ),
               child: Text("USD \$"),
             ),
@@ -184,7 +188,7 @@ class _HomeViewState extends State<HomeView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
+                  padding: const EdgeInsets.only(right: 1.0),
                   child: Text(" / BRL \$"),
                 ),
                 Obx(() => Text(

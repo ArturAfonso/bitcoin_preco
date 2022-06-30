@@ -35,7 +35,8 @@ class HomeController extends GetxController {
   }
 
   currencyReturn(String primaryCurrency, String qtdCurrency) async {
-    int qtd = int.parse(qtdController.text);
+    var tempqtd = qtdCurrency.replaceAll(RegExp(r','), '.');
+    double? qtd = double.tryParse(tempqtd);
     String url = "https://blockchain.info/ticker";
     String url2 = "https://blockchain.info/tobtc?currency=USD&value=500";
     http.Response response1 = await http.get(Uri.parse(url));
@@ -45,7 +46,7 @@ class HomeController extends GetxController {
       print(value["symbol"]);
     });
     http.Response response = await http.get(Uri.parse(
-        "https://blockchain.info/tobtc?currency=${primaryCurrency}&value=${qtdCurrency}"));
+        "https://blockchain.info/tobtc?currency=${primaryCurrency}&value=${qtd}"));
     valorConvertido.value = double.parse(response.body);
     //Map<String, dynamic> retorno = json.decode(response.body);
   }
